@@ -15,6 +15,18 @@ const navLinks = document.querySelectorAll(".nav-link");
 
 const currentYear = document.getElementById("currentYear");
 
+const productModal = document.getElementById("productModal");
+const orderForm = document.getElementById("orderForm");
+const modalProductTitle = document.getElementById("modalProductTitle");
+const modalProductDescription = document.getElementById("modalProductDescription");
+const modalProductDetails = document.getElementById("modalProductDetails");
+const orderProduct = document.getElementById("orderProduct");
+const orderQuantity = document.getElementById("orderQuantity");
+const contactModal = document.getElementById("contactModal");
+const contactForm = document.getElementById("contactForm");
+let lastFocusedProductTrigger = null;
+let lastFocusedContactTrigger = null;
+
 /* =========================================================
    2. MOBILE NAVIGATION
 ========================================================= */
@@ -174,6 +186,145 @@ if (currentYear) {
 }
 
 /* =========================================================
+   9. PRODUCT DETAILS AND ORDER MODAL
+========================================================= */
+
+function closeProductModal() {
+  if (!productModal) {
+    return;
+  }
+
+  productModal.classList.remove("is-open");
+  productModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+
+  if (lastFocusedProductTrigger) {
+    lastFocusedProductTrigger.focus();
+  }
+}
+
+document.querySelectorAll(".product-detail-trigger").forEach((trigger) => {
+  trigger.addEventListener("click", () => {
+    if (!productModal) {
+      return;
+    }
+
+    lastFocusedProductTrigger = trigger;
+
+    const product = trigger.dataset.product || "Poultry product";
+
+    modalProductTitle.textContent = product;
+    modalProductDescription.textContent = trigger.dataset.productDescription || "";
+    modalProductDetails.textContent = trigger.dataset.productDetails || "";
+    orderProduct.value = product;
+    orderQuantity.placeholder = trigger.dataset.quantityPlaceholder || "Enter quantity";
+
+    productModal.classList.add("is-open");
+    productModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+
+    document.getElementById("orderName").focus();
+  });
+});
+
+document.querySelectorAll("[data-modal-close]").forEach((closeButton) => {
+  closeButton.addEventListener("click", closeProductModal);
+});
+
+if (orderForm) {
+  orderForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const submitMethod = event.submitter ? event.submitter.dataset.sendMethod : "whatsapp";
+    const formData = new FormData(orderForm);
+    const orderText = [
+      `Hello Naminga Poultry, I would like to order ${formData.get("product")}.`,
+      "",
+      `Name: ${formData.get("name")}`,
+      `Phone: ${formData.get("phone")}`,
+      `Quantity: ${formData.get("quantity")}`,
+      `Delivery area: ${formData.get("location")}`,
+      `Additional details: ${formData.get("message") || "None"}`,
+    ].join("\\n");
+
+    if (submitMethod === "email") {
+      const subject = encodeURIComponent(`Order request: ${formData.get("product")}`);
+      const body = encodeURIComponent(orderText);
+      window.location.href = `mailto:info@namingapoultry.co.tz?subject=${subject}&body=${body}`;
+      return;
+    }
+
+    window.open(`https://wa.me/255770025770?text=${encodeURIComponent(orderText)}`, "_blank", "noopener,noreferrer");
+  });
+}
+
+/* =========================================================
+   10. CONTACT MODAL
+========================================================= */
+
+function closeContactModal() {
+  if (!contactModal) {
+    return;
+  }
+
+  contactModal.classList.remove("is-open");
+  contactModal.setAttribute("aria-hidden", "true");
+
+  if (!productModal || !productModal.classList.contains("is-open")) {
+    document.body.classList.remove("modal-open");
+  }
+
+  if (lastFocusedContactTrigger) {
+    lastFocusedContactTrigger.focus();
+  }
+}
+
+const contactModalTrigger = document.querySelector(".contact-modal-trigger");
+
+if (contactModalTrigger && contactModal) {
+  contactModalTrigger.addEventListener("click", (event) => {
+    event.preventDefault();
+
+    lastFocusedContactTrigger = contactModalTrigger;
+    contactModal.classList.add("is-open");
+    contactModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    contactModal.querySelector('input[name="name"]').focus();
+  });
+}
+
+document.querySelectorAll("[data-contact-modal-close]").forEach((closeButton) => {
+  closeButton.addEventListener("click", closeContactModal);
+});
+
+if (contactForm) {
+  contactForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const submitMethod = event.submitter ? event.submitter.dataset.contactSendMethod : "whatsapp";
+    const formData = new FormData(contactForm);
+    const messageText = [
+      "Hello Naminga Poultry, I would like to get in touch.",
+      "",
+      `Name: ${formData.get("name")}`,
+      `Phone: ${formData.get("phone")}`,
+      `Email: ${formData.get("email")}`,
+      `Subject: ${formData.get("subject")}`,
+      `Message: ${formData.get("message")}`,
+    ].join("\\n");
+
+    if (submitMethod === "email") {
+      const subject = encodeURIComponent(formData.get("subject"));
+      const body = encodeURIComponent(messageText);
+      window.location.href = `mailto:info@namingapoultry.co.tz?subject=${subject}&body=${body}`;
+      return;
+    }
+
+    window.open(`https://wa.me/255770025770?text=${encodeURIComponent(messageText)}`, "_blank", "noopener,noreferrer");
+  });
+}
+
+/* =========================================================
    9. SCROLL REVEAL ANIMATION
 ========================================================= */
 
@@ -242,6 +393,9 @@ whyItems.forEach((item, index) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
+    closeProductModal();
+    closeContactModal();
+
     if (mainNav) {
       mainNav.classList.remove("open");
     }
@@ -255,7 +409,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 /* =========================================================
-   13. DETECT QUALITY SECTION
+  14. DETECT QUALITY SECTION
 ========================================================= */
 
 /*
@@ -278,7 +432,7 @@ if (qualitySection && !qualitySection.id) {
 }
 
 /* =========================================================
-   14. PREVENT BROKEN IMAGE EXPERIENCE
+  15. PREVENT BROKEN IMAGE EXPERIENCE
 ========================================================= */
 
 const images = document.querySelectorAll("img");
@@ -290,7 +444,7 @@ images.forEach((image) => {
 });
 
 /* =========================================================
-   15. PAGE LOADED
+  16. PAGE LOADED
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {

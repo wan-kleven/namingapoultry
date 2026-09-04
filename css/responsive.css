@@ -478,6 +478,24 @@
         gap: 8px;
     }
 
+
+    /* PRODUCT ORDER MODAL */
+
+    .product-modal {
+        padding: 12px;
+    }
+
+    .modal-product-info,
+    .order-panel {
+        padding-right: 26px;
+        padding-left: 26px;
+    }
+
+    .order-form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
 }
 
 
@@ -600,6 +618,22 @@
 
     .footer-brand {
         grid-column: auto;
+    }
+
+
+    /* PRODUCT ORDER MODAL */
+
+    .modal-product-info {
+        padding-top: 34px;
+    }
+
+    .modal-product-info h2 {
+        font-size: 34px;
+    }
+
+    .order-actions,
+    .order-actions .btn {
+        width: 100%;
     }
 
 }

@@ -26,6 +26,10 @@ body {
     overflow-x: hidden;
 }
 
+body.modal-open {
+    overflow: hidden;
+}
+
 img {
     display: block;
     width: 100%;
@@ -58,6 +62,9 @@ ul {
     --orange: #e85b20;
     --orange-dark: #c94712;
     --orange-light: #f47b3e;
+
+    --heading-gold: #d9a441;
+    --description-gold: #b8860b;
 
     --cream: #f8f5ef;
     --light-gray: #f5f5f2;
@@ -341,7 +348,7 @@ ul {
     font-weight: 800;
 
     letter-spacing: -2px;
-    color: #000000;
+    color: var(--heading-gold);
 }
 
 .hero h1 span {
@@ -360,7 +367,7 @@ ul {
 
     line-height: 1.75;
 
-    color: #000000;
+    color: var(--description-gold);
 }
 
 
@@ -503,6 +510,34 @@ ul {
     font-size: 15px;
 
     line-height: 1.8;
+}
+
+.experience-stat {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+
+    margin-top: 32px;
+    padding-left: 18px;
+
+    border-left: 3px solid var(--orange);
+}
+
+.experience-stat strong {
+    color: var(--green-dark);
+
+    font-family: var(--heading-font);
+    font-size: 38px;
+    line-height: 1;
+}
+
+.experience-stat span {
+    color: var(--text-gray);
+
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .about-features {
@@ -672,6 +707,13 @@ ul {
 }
 
 .product-link {
+    border: 0;
+    padding: 0;
+
+    background: transparent;
+
+    cursor: pointer;
+
     display: inline-flex;
 
     align-items: center;
@@ -692,6 +734,171 @@ ul {
 
 .product-link:hover {
     gap: 18px;
+}
+
+/* PRODUCT DETAILS AND ORDER MODAL */
+
+.product-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+
+    display: grid;
+    place-items: center;
+
+    padding: 24px;
+
+    visibility: hidden;
+    opacity: 0;
+
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.product-modal.is-open {
+    visibility: visible;
+    opacity: 1;
+}
+
+.product-modal-backdrop {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(9, 21, 14, 0.78);
+}
+
+.product-modal-dialog {
+    position: relative;
+    z-index: 1;
+
+    width: min(100%, 760px);
+    max-height: min(92vh, 760px);
+    overflow-y: auto;
+
+    background: var(--white);
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+
+    transform: translateY(18px);
+    transition: transform 0.25s ease;
+}
+
+.product-modal.is-open .product-modal-dialog {
+    transform: translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 2;
+
+    width: 36px;
+    height: 36px;
+
+    border: 1px solid rgba(18, 34, 25, 0.15);
+    border-radius: 50%;
+
+    background: var(--white);
+    color: var(--green-dark);
+
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.modal-product-info {
+    padding: 42px 46px 34px;
+    background: var(--cream);
+}
+
+.modal-product-info h2 {
+    margin-bottom: 14px;
+
+    color: var(--green-dark);
+    font-family: var(--heading-font);
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.05;
+}
+
+.modal-product-info > p:not(.modal-product-details) {
+    max-width: 600px;
+    color: var(--text-gray);
+    font-size: 15px;
+}
+
+.modal-product-details {
+    margin-top: 12px;
+    color: var(--orange);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.order-panel {
+    padding: 34px 46px 42px;
+}
+
+.order-panel h3 {
+    margin-bottom: 22px;
+    color: var(--green-dark);
+    font-family: var(--heading-font);
+    font-size: 25px;
+}
+
+.order-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.order-panel label {
+    display: grid;
+    gap: 7px;
+
+    margin-bottom: 16px;
+
+    color: var(--green-dark);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.order-panel input,
+.order-panel textarea {
+    width: 100%;
+
+    border: 1px solid var(--border);
+    border-radius: 2px;
+
+    padding: 12px 13px;
+
+    background: var(--white);
+    color: var(--text-dark);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 400;
+    outline: none;
+    resize: vertical;
+}
+
+.order-panel input:focus,
+.order-panel textarea:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(232, 91, 32, 0.12);
+}
+
+.order-note {
+    margin: 4px 0 16px;
+    color: var(--text-gray);
+    font-size: 12px;
+}
+
+.order-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.order-actions .btn {
+    min-height: 46px;
+    gap: 10px;
 }
 
 
@@ -1162,6 +1369,11 @@ ul {
     font-size: 12px;
 
     transition: var(--transition);
+}
+
+.footer-socials svg {
+    width: 17px;
+    height: 17px;
 }
 
 .footer-socials a:hover {
