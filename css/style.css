@@ -130,7 +130,7 @@ ul {
 .brand-logo {
     width: 145px;
     height: auto;
-    object-fit: contain;
+    object-fit: fill;
 }
 
 
@@ -481,6 +481,17 @@ ul {
     color: var(--orange);
 }
 
+.products-intro {
+    max-width: 600px;
+
+    margin-top: 18px;
+
+    color: var(--green-dark);
+
+    font-size: 15px;
+    line-height: 1.7;
+}
+
 
 /* =========================================================
    7. ABOUT
@@ -609,7 +620,72 @@ ul {
 ========================================================= */
 
 .products-section {
+    position: relative;
+
+    overflow: hidden;
+
     background: var(--cream);
+}
+
+.products-watermark {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+}
+
+.products-watermark-image {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    opacity: 0;
+
+    object-fit: cover;
+    object-position: center;
+    animation: products-watermark-fade 12s ease-in-out infinite;
+}
+
+.products-watermark-black {
+    opacity: 0.12;
+}
+
+.products-watermark-orange {
+    animation-delay: 6s;
+}
+
+.products-section > .container {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes products-watermark-fade {
+    0%,
+    8% {
+        opacity: 0;
+    }
+
+    18%,
+    42% {
+        opacity: 0.12;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .products-watermark-image {
+        animation: none;
+    }
+
+    .products-watermark-black {
+        opacity: 0.12;
+    }
 }
 
 .products-grid {
@@ -650,6 +726,133 @@ ul {
     object-fit: cover;
 
     transition: transform 0.6s ease;
+}
+
+.product-slideshow-image {
+    position: absolute;
+    inset: 0;
+
+    animation: product-image-slideshow 10s ease-in-out infinite;
+}
+
+.product-slideshow-second {
+    opacity: 0;
+}
+
+@keyframes product-image-slideshow {
+    0%,
+    40% {
+        opacity: 1;
+    }
+
+    50%,
+    90% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.product-slideshow-second {
+    animation-name: product-image-slideshow-second;
+}
+
+.chicken-cuts-slideshow-image {
+    position: absolute;
+    inset: 0;
+
+    opacity: 0;
+    object-fit: contain;
+    object-position: center;
+    animation: chicken-cuts-image-slideshow 30s ease-in-out infinite;
+}
+
+.chicken-cuts-slideshow-image:nth-child(2) {
+    animation-delay: -3s;
+}
+
+.chicken-cuts-slideshow-image:nth-child(3) {
+    animation-delay: -6s;
+}
+
+.chicken-cuts-slideshow-image:nth-child(4) {
+    animation-delay: -9s;
+}
+
+.chicken-cuts-slideshow-image:nth-child(5) {
+    animation-delay: -12s;
+}
+
+.chicken-cuts-slideshow-image:nth-child(6) {
+    animation-delay: -15s;
+}
+
+.chicken-cuts-slideshow-image:nth-child(7) {
+    animation-delay: -18s;
+}
+
+.chicken-cuts-slideshow-image:nth-child(8) {
+    animation-delay: -21s;
+}
+
+.chicken-cuts-slideshow-image:nth-child(9) {
+    animation-delay: -24s;
+}
+
+.chicken-cuts-slideshow-image:nth-child(10) {
+    animation-delay: -27s;
+}
+
+@keyframes chicken-cuts-image-slideshow {
+    0%,
+    7% {
+        opacity: 1;
+    }
+
+    10%,
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes product-image-slideshow-second {
+    0%,
+    40% {
+        opacity: 0;
+    }
+
+    50%,
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .product-slideshow-image {
+        animation: none;
+    }
+
+    .product-slideshow-first {
+        opacity: 1;
+    }
+
+    .product-slideshow-second {
+        opacity: 0;
+    }
+
+    .chicken-cuts-slideshow-image {
+        animation: none;
+    }
+
+    .chicken-cuts-slideshow-image:first-child {
+        opacity: 1;
+    }
 }
 
 .product-card:hover .product-image {
@@ -860,7 +1063,12 @@ ul {
     font-weight: 700;
 }
 
+.order-panel label[hidden] {
+    display: none;
+}
+
 .order-panel input,
+.order-panel select,
 .order-panel textarea {
     width: 100%;
 
@@ -876,6 +1084,10 @@ ul {
     font-weight: 400;
     outline: none;
     resize: vertical;
+}
+
+.order-panel select {
+    appearance: auto;
 }
 
 .order-panel input:focus,
@@ -1149,12 +1361,15 @@ ul {
 
 .gallery-image {
     overflow: hidden;
+
+    background: var(--cream);
 }
 
 .gallery-image img {
     height: 100%;
 
-    object-fit: cover;
+    object-fit: contain;
+    object-position: center;
 
     transition: transform 0.5s ease;
 }
@@ -1164,6 +1379,14 @@ ul {
 }
 
 .gallery-large {
+    grid-row: span 2;
+}
+
+.gallery-large img {
+    object-fit: cover;
+}
+
+.gallery-product-full {
     grid-row: span 2;
 }
 

@@ -22,6 +22,9 @@ const modalProductDescription = document.getElementById("modalProductDescription
 const modalProductDetails = document.getElementById("modalProductDetails");
 const orderProduct = document.getElementById("orderProduct");
 const orderQuantity = document.getElementById("orderQuantity");
+const orderQuantityLabel = document.getElementById("orderQuantityLabel");
+const chickenCutsChoiceGroup = document.getElementById("chickenCutsChoiceGroup");
+const orderCutChoice = document.getElementById("orderCutChoice");
 const contactModal = document.getElementById("contactModal");
 const contactForm = document.getElementById("contactForm");
 let lastFocusedProductTrigger = null;
@@ -219,6 +222,22 @@ document.querySelectorAll(".product-detail-trigger").forEach((trigger) => {
     orderProduct.value = product;
     orderQuantity.placeholder = trigger.dataset.quantityPlaceholder || "Enter quantity";
 
+    const isChickenCutsOrder = product === "Dream Chicken Cuts";
+
+    if (chickenCutsChoiceGroup && orderCutChoice) {
+      chickenCutsChoiceGroup.hidden = !isChickenCutsOrder;
+      orderCutChoice.required = isChickenCutsOrder;
+    }
+
+    orderQuantity.type = isChickenCutsOrder ? "number" : "text";
+    orderQuantity.min = isChickenCutsOrder ? "1" : "";
+    if (orderQuantityLabel) {
+      orderQuantityLabel.textContent = isChickenCutsOrder ? "Number of packets" : "Quantity";
+    }
+    orderQuantity.placeholder = isChickenCutsOrder
+      ? "e.g. 5 packets"
+      : trigger.dataset.quantityPlaceholder || "Enter quantity";
+
     productModal.classList.add("is-open");
     productModal.setAttribute("aria-hidden", "false");
     document.body.classList.add("modal-open");
@@ -237,12 +256,14 @@ if (orderForm) {
 
     const submitMethod = event.submitter ? event.submitter.dataset.sendMethod : "whatsapp";
     const formData = new FormData(orderForm);
+    const selectedCut = formData.get("cutChoice");
+    const quantityLabel = selectedCut ? `${selectedCut}: ${formData.get("quantity")} packet(s)` : formData.get("quantity");
     const orderText = [
       `Hello Naminga Poultry, I would like to order ${formData.get("product")}.`,
       "",
       `Name: ${formData.get("name")}`,
       `Phone: ${formData.get("phone")}`,
-      `Quantity: ${formData.get("quantity")}`,
+      `Quantity: ${quantityLabel}`,
       `Delivery area: ${formData.get("location")}`,
       `Additional details: ${formData.get("message") || "None"}`,
     ].join("\\n");
